@@ -1,38 +1,77 @@
 import { Avatar } from './Avatar';
 import { Comment } from './Comment';
+import { format, formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale/pt-BR'
 
 import styles from './Post.module.css';
+import { useState } from 'react';
 
-import arthur from '../imagens/arthur.png';
 
+export function Post({ author, publishedAt, content }) {
 
-export function Post() {
+    const [comments, setComments] = useState([
+        'Concordo com tudo dito.'
+    ])
+
+    const [newCommentText, setNewCommentText] = useState('')
+
+    const publishedDateFormatted = format(publishedAt, "dd 'de' LLLL 'ás' HH:mm'h'", {
+        locale: ptBR,
+    });
+
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBR,
+        addSuffix: true,
+
+    });
+
+    function handleCreateNewComment() {
+        event.preventDefault() // evita o evento padrão da linguagem, ou seja HTML
+
+        setComments([...comments, newCommentText]);   //spread, copia tudo e adiciona o newcommentext
+        setNewCommentText('');    // para apagar o texto e limpar a textarea
+    }
+
+    function handleNewComenntChange (){
+
+        setNewCommentText ( event.target.value);
+    }
+
     return (
         <article className={styles.post}>
             <header className={styles.cabeca}>
                 <div className={styles.author}>
-                    <Avatar src={arthur} alt='manotuts' />
+                    <Avatar src={author.avatarUrl} />
                     <div className={styles.authorinfo}>
-                        <strong>Arthur 'BlueJacket' Macena</strong>
-                        <span>(Suporte)</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
 
-                <time className={styles.time} title='LipegreenFan' dateTime='26-09-2024'>Publicado há 2 horas</time>
+                <time title="{publishedDateFormatted}" dateTime={publishedAt.toISOString("27-09-2024")}>
+                    {publishedDateRelativeToNow}
+                </time>
             </header>
 
             <div className={styles.content}>
-                <p>Que time incrível!! Dar suporte para um dos melhores duelistas que é o Kauski se torna moleza com tanta skill que ele tem xD.</p>
-                <p>Nada entra no bomb A da Acent quando estou com o Kauski.</p>
-                <p>Tenho sorte de jogar com ele no meu time.</p>
-                <p><a href='#'>#GoFinalAce</a></p>
+                {content.map(line => {
+                    if (line.type === 'paragraph') {
+                        return <p>{line.content}</p>;
+
+                    } else if (line.type === 'link') {
+                        return <p><a href="#">{line.content}</a></p>
+                    }
+                })}
             </div>
 
-            <form className={styles.comentario}>
+            <form onSubmit={handleCreateNewComment} className={styles.comentario}>
                 <strong>Fale algo</strong>
 
                 <textarea
+                    name='comment'
                     placeholder="Comente Aqui..."
+                    value={newCommentText}
+                    onChange={handleNewComenntChange}
                 />
 
                 <footer>
@@ -41,7 +80,9 @@ export function Post() {
             </form>
 
             <div className={styles.commentList}>
-                <Comment />
+                {comments.map(comment => {
+                    return <Comment content={comment} />
+                })}
             </div>
         </article >
 

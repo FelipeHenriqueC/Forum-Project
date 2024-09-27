@@ -4,7 +4,7 @@ import caio from '../imagens/caio.png';
 import { ThumbsUp, Trash, TrashSimple } from 'phosphor-react';
 import { Avatar } from './Avatar';
 
-export function Comment() {
+export function Comment({content}) {
     return (
         <div className={styles.comment}>
             <Avatar hasBorder={false} src={caio} />
@@ -21,7 +21,7 @@ export function Comment() {
                             <Trash size={24} />
                         </button>
                     </header>
-                    <p>Tenho que concordar, esse cara aumenta muito o nível!!</p>
+                    <p>{content}</p>
                 </div>
 
                 <footer>

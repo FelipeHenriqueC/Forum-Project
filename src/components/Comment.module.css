@@ -45,6 +45,7 @@
     background-color: var(--gray-700);
     border-radius: 7px;
     padding: 1rem;
+    font-size: 14px;
 }
 
 .commentContent Button {
