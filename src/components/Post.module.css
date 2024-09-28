@@ -17,7 +17,7 @@
 }
 
 .content p {
-    margin: 13px;
+    margin: 16px;
 }
 
 .content a {
@@ -112,8 +112,14 @@
 
 }
 
-.comentario>button[type=submit]:hover {
+.comentario>button[type=submit]:not(:disabled):hover {
     background: var(--green-300);
+}
+
+.comentario>button[type=submit]:disabled{
+    opacity: 0.7;
+    cursor: not-allowed;
+
 }
 
 .commentList{
